@@ -308,15 +308,15 @@ const Index = () => {
 
       <section className="pt-32 pb-20 px-4">
         <div className="container mx-auto text-center animate-fade-in">
-          <Badge className="mb-6 bg-primary/10 text-primary border-primary/20 text-sm px-4 py-2">
+          <Badge className="mb-6 bg-gradient-to-r from-primary to-accent text-white border-0 text-base px-6 py-3 shadow-lg">
             {content.hero.badge}
           </Badge>
           <h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
-            <span className="bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-orange-500 via-red-500 to-pink-600 bg-clip-text text-transparent drop-shadow-2xl">
               {content.hero.title}
             </span>
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl text-foreground font-semibold mb-10 max-w-3xl mx-auto">
             {content.hero.subtitle}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
