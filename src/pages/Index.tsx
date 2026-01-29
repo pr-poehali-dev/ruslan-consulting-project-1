@@ -164,9 +164,9 @@ const defaultContent: SiteContent = {
     }
   ],
   contacts: {
-    email: 'ruslan@consulting.ru',
-    phone: '+7 (999) 123-45-67',
-    location: 'Москва, работаю по всей России'
+    email: 'fatullayev_1991@mail.ru',
+    phone: '+7 977 390-87-20',
+    location: 'Москва, работаю по всей России и СНГ'
   }
 };
 
@@ -354,7 +354,7 @@ const Index = () => {
             </div>
             <div className="animate-scale-in">
               <img 
-                src="https://images.unsplash.com/photo-1556745753-b2904692b3cd?w=800&q=80" 
+                src="https://cdn.poehali.dev/projects/6b1776a5-5ad4-4d59-939e-e956f4115038/bucket/bf4526f3-7352-4a21-b1d9-f0be865f0623.jpg" 
                 alt="Руслан Фатуллаев" 
                 className="rounded-2xl shadow-2xl w-full h-[600px] object-cover"
               />
@@ -549,17 +549,29 @@ const Index = () => {
                   </div>
                 </div>
                 <div className="flex gap-4 pt-4">
-                  <Button size="icon" variant="outline" className="rounded-full">
-                    <Icon name="Instagram" size={20} />
+                  <Button 
+                    size="icon" 
+                    variant="outline" 
+                    className="rounded-full hover:bg-green-500 hover:text-white transition-colors"
+                    onClick={() => window.open('https://wa.me/79773908720', '_blank')}
+                  >
+                    <Icon name="Phone" size={20} />
                   </Button>
-                  <Button size="icon" variant="outline" className="rounded-full">
-                    <Icon name="Facebook" size={20} />
+                  <Button 
+                    size="icon" 
+                    variant="outline" 
+                    className="rounded-full hover:bg-blue-500 hover:text-white transition-colors"
+                    onClick={() => window.open('https://t.me/Roko_Tiis', '_blank')}
+                  >
+                    <Icon name="Send" size={20} />
                   </Button>
-                  <Button size="icon" variant="outline" className="rounded-full">
-                    <Icon name="Linkedin" size={20} />
-                  </Button>
-                  <Button size="icon" variant="outline" className="rounded-full">
-                    <Icon name="MessageCircle" size={20} />
+                  <Button 
+                    size="icon" 
+                    variant="outline" 
+                    className="rounded-full"
+                    onClick={() => window.location.href = `mailto:${content.contacts.email}`}
+                  >
+                    <Icon name="Mail" size={20} />
                   </Button>
                 </div>
               </div>

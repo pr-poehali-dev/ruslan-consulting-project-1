@@ -166,9 +166,9 @@ const defaultContent: SiteContent = {
     }
   ],
   contacts: {
-    email: 'ruslan@consulting.ru',
-    phone: '+7 (999) 123-45-67',
-    location: 'Москва, работаю по всей России'
+    email: 'fatullayev_1991@mail.ru',
+    phone: '+7 977 390-87-20',
+    location: 'Москва, работаю по всей России и СНГ'
   }
 };
 
