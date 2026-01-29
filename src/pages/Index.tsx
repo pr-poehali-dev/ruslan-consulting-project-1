@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar } from '@/components/ui/calendar';
@@ -6,11 +6,66 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Badge } from '@/components/ui/badge';
 import Icon from '@/components/ui/icon';
 
-const Index = () => {
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const [selectedTime, setSelectedTime] = useState<string>('');
+interface SiteContent {
+  hero: {
+    badge: string;
+    title: string;
+    subtitle: string;
+  };
+  about: {
+    name: string;
+    description1: string;
+    description2: string;
+    stats: { value: string; label: string }[];
+  };
+  services: {
+    title: string;
+    description: string;
+    icon: string;
+    price: string;
+  }[];
+  portfolio: {
+    name: string;
+    location: string;
+    result: string;
+    image: string;
+  }[];
+  testimonials: {
+    name: string;
+    position: string;
+    text: string;
+    avatar: string;
+  }[];
+  blog: {
+    title: string;
+    date: string;
+    excerpt: string;
+    image: string;
+  }[];
+  contacts: {
+    email: string;
+    phone: string;
+    location: string;
+  };
+}
 
-  const services = [
+const defaultContent: SiteContent = {
+  hero: {
+    badge: '15 лет в ресторанном бизнесе',
+    title: 'Увеличьте прибыль вашего бара или ресторана',
+    subtitle: 'Наставник с 15-летним опытом в ресторанном бизнесе. Помогаю создать уникальные впечатления и увеличить прибыль вашего бара или ресторана.'
+  },
+  about: {
+    name: 'Руслан Фатуллаев',
+    description1: 'За 15 лет в индустрии я открыл 12 успешных баров и ресторанов, обучил более 500 специалистов и помог десяткам заведений выйти из кризиса.',
+    description2: 'Моя философия проста: каждое заведение должно создавать уникальный опыт для гостей и при этом быть прибыльным. Я не даю шаблонных решений — каждый проект индивидуален.',
+    stats: [
+      { value: '15+', label: 'лет опыта' },
+      { value: '50+', label: 'проектов' },
+      { value: '500+', label: 'специалистов' }
+    ]
+  },
+  services: [
     {
       title: 'Аудит бара или ресторана',
       description: 'Полный анализ текущих процессов, выявление точек роста и зон оптимизации',
@@ -47,9 +102,8 @@ const Index = () => {
       icon: 'HeartHandshake',
       price: 'от 100 000 ₽/мес'
     }
-  ];
-
-  const portfolio = [
+  ],
+  portfolio: [
     {
       name: 'Bar 812',
       location: 'Москва',
@@ -68,9 +122,8 @@ const Index = () => {
       result: 'Рост среднего чека на 30%',
       image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&q=80'
     }
-  ];
-
-  const testimonials = [
+  ],
+  testimonials: [
     {
       name: 'Алексей Иванов',
       position: 'Владелец сети баров "Urban"',
@@ -89,9 +142,8 @@ const Index = () => {
       text: 'Профессионал своего дела. Руслан не просто даёт советы, а реально погружается в бизнес.',
       avatar: 'ДС'
     }
-  ];
-
-  const blogPosts = [
+  ],
+  blog: [
     {
       title: '5 ошибок при запуске бара',
       date: '15 января 2026',
@@ -110,7 +162,25 @@ const Index = () => {
       excerpt: 'Что будет актуально в этом году: от концепций до технологий обслуживания...',
       image: 'https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=800&q=80'
     }
-  ];
+  ],
+  contacts: {
+    email: 'ruslan@consulting.ru',
+    phone: '+7 (999) 123-45-67',
+    location: 'Москва, работаю по всей России'
+  }
+};
+
+const Index = () => {
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [selectedTime, setSelectedTime] = useState<string>('');
+  const [content, setContent] = useState<SiteContent>(defaultContent);
+
+  useEffect(() => {
+    const savedContent = localStorage.getItem('siteContent');
+    if (savedContent) {
+      setContent(JSON.parse(savedContent));
+    }
+  }, []);
 
   const timeSlots = ['10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
 
@@ -187,17 +257,15 @@ const Index = () => {
       <section className="pt-32 pb-20 px-4">
         <div className="container mx-auto text-center animate-fade-in">
           <Badge className="mb-6 bg-primary/10 text-primary border-primary/20 text-sm px-4 py-2">
-            15 лет в ресторанном бизнесе
+            {content.hero.badge}
           </Badge>
           <h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
             <span className="bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
-              Увеличьте прибыль
+              {content.hero.title}
             </span>
-            <br />
-            вашего бара или ресторана
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-3xl mx-auto">
-            Наставник с 15-летним опытом в ресторанном бизнесе. Помогаю создать уникальные впечатления и увеличить прибыль вашего бара или ресторана.
+            {content.hero.subtitle}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Dialog>
@@ -267,27 +335,21 @@ const Index = () => {
             <div className="animate-slide-up">
               <Badge className="mb-4 bg-secondary/10 text-secondary border-secondary/20">Обо мне</Badge>
               <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                Руслан Фатуллаев
+                {content.about.name}
               </h2>
               <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-                За 15 лет в индустрии я открыл 12 успешных баров и ресторанов, обучил более 500 специалистов и помог десяткам заведений выйти из кризиса.
+                {content.about.description1}
               </p>
               <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-                Моя философия проста: каждое заведение должно создавать уникальный опыт для гостей и при этом быть прибыльным. Я не даю шаблонных решений — каждый проект индивидуален.
+                {content.about.description2}
               </p>
               <div className="grid grid-cols-3 gap-6 mt-8">
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-primary mb-2">15+</div>
-                  <div className="text-sm text-muted-foreground">лет опыта</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-secondary mb-2">50+</div>
-                  <div className="text-sm text-muted-foreground">проектов</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-accent mb-2">500+</div>
-                  <div className="text-sm text-muted-foreground">специалистов</div>
-                </div>
+                {content.about.stats.map((stat, index) => (
+                  <div key={index} className="text-center">
+                    <div className="text-4xl font-bold text-primary mb-2">{stat.value}</div>
+                    <div className="text-sm text-muted-foreground">{stat.label}</div>
+                  </div>
+                ))}
               </div>
             </div>
             <div className="animate-scale-in">
@@ -311,7 +373,7 @@ const Index = () => {
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {services.map((service, index) => (
+            {content.services.map((service, index) => (
               <Card 
                 key={index} 
                 className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-2 hover:border-primary/50"
@@ -350,7 +412,7 @@ const Index = () => {
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
-            {portfolio.map((project, index) => (
+            {content.portfolio.map((project, index) => (
               <Card key={index} className="overflow-hidden group hover:shadow-2xl transition-all duration-300">
                 <div className="relative h-64 overflow-hidden">
                   <img 
@@ -383,7 +445,7 @@ const Index = () => {
             <h2 className="text-4xl md:text-5xl font-bold mb-6">Что говорят клиенты</h2>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
+            {content.testimonials.map((testimonial, index) => (
               <Card key={index} className="hover:shadow-xl transition-shadow">
                 <CardHeader>
                   <div className="flex items-center gap-4 mb-4">
@@ -417,7 +479,7 @@ const Index = () => {
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
-            {blogPosts.map((post, index) => (
+            {content.blog.map((post, index) => (
               <Card key={index} className="overflow-hidden group hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
                 <div className="relative h-48 overflow-hidden">
                   <img 
@@ -465,7 +527,7 @@ const Index = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">Email</h3>
-                    <p className="text-muted-foreground">ruslan@consulting.ru</p>
+                    <p className="text-muted-foreground">{content.contacts.email}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
@@ -474,7 +536,7 @@ const Index = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">Телефон</h3>
-                    <p className="text-muted-foreground">+7 (999) 123-45-67</p>
+                    <p className="text-muted-foreground">{content.contacts.phone}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
@@ -483,7 +545,7 @@ const Index = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">Локация</h3>
-                    <p className="text-muted-foreground">Москва, работаю по всей России</p>
+                    <p className="text-muted-foreground">{content.contacts.location}</p>
                   </div>
                 </div>
                 <div className="flex gap-4 pt-4">
