@@ -105,22 +105,22 @@ const defaultContent: SiteContent = {
   ],
   portfolio: [
     {
-      name: 'Bar 812',
+      name: 'Гарда Бар',
       location: 'Москва',
-      result: '+45% выручки за 6 месяцев',
-      image: 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&q=80'
+      result: 'Концепция и запуск заведения',
+      image: 'https://avatars.mds.yandex.net/get-altay/13052575/2a000001926f1659819c9e69ba53fe825b42/XXL_height'
     },
     {
-      name: 'Ресторан "Seasons"',
-      location: 'Санкт-Петербург',
-      result: 'Открытие с нуля, окупаемость за 8 месяцев',
-      image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80'
+      name: 'Ресторан Панчетта',
+      location: 'Москва',
+      result: 'Разработка концепции и обучение персонала',
+      image: 'https://avatars.mds.yandex.net/get-altay/492154/2a0000016286dde0cbb9cbf79fe70acc6df4/XXXL'
     },
     {
-      name: 'Craft Beer House',
-      location: 'Казань',
-      result: 'Рост среднего чека на 30%',
-      image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&q=80'
+      name: 'Кофейня Алхимия кофе',
+      location: 'Москва',
+      result: 'Полный аудит и оптимизация процессов',
+      image: 'https://avatars.mds.yandex.net/get-altay/15291179/2a00000199cdd2cd227d9764b83573ec2901/XXXL'
     }
   ],
   testimonials: [
