@@ -174,6 +174,10 @@ const Index = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [selectedTime, setSelectedTime] = useState<string>('');
   const [content, setContent] = useState<SiteContent>(defaultContent);
+  const [selectedServices, setSelectedServices] = useState<number[]>([]);
+  const [projectType, setProjectType] = useState<string>('');
+  const [teamSize, setTeamSize] = useState<string>('');
+  const [showQuoteDialog, setShowQuoteDialog] = useState(false);
 
   useEffect(() => {
     const savedContent = localStorage.getItem('siteContent');
@@ -183,6 +187,54 @@ const Index = () => {
   }, []);
 
   const timeSlots = ['10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
+
+  const servicePrices: { [key: string]: number } = {
+    'Аудит бара или ресторана': 150000,
+    'Разработка концепции': 300000,
+    'Обучение персонала': 80000,
+    'Меню-инжиниринг': 120000,
+    'Антикризисное управление': 250000,
+    'Операционное сопровождение / Наставничество': 200000
+  };
+
+  const projectTypeMultiplier: { [key: string]: number } = {
+    'Новое заведение': 1.3,
+    'Действующий бизнес': 1.0,
+    'Франшиза': 1.2
+  };
+
+  const teamSizeMultiplier: { [key: string]: number } = {
+    'До 10 человек': 1.0,
+    '10-30 человек': 1.3,
+    '30+ человек': 1.6
+  };
+
+  const toggleService = (index: number) => {
+    setSelectedServices(prev => 
+      prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
+    );
+  };
+
+  const calculateTotal = () => {
+    let baseTotal = selectedServices.reduce((sum, index) => {
+      const serviceTitle = content.services[index].title;
+      return sum + (servicePrices[serviceTitle] || 0);
+    }, 0);
+
+    if (projectType && projectTypeMultiplier[projectType]) {
+      baseTotal *= projectTypeMultiplier[projectType];
+    }
+
+    if (teamSize && teamSizeMultiplier[teamSize]) {
+      baseTotal *= teamSizeMultiplier[teamSize];
+    }
+
+    return Math.round(baseTotal);
+  };
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('ru-RU').format(price);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted">
@@ -506,6 +558,164 @@ const Index = () => {
               </Card>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="py-20 px-4 bg-muted/30">
+        <div className="container mx-auto max-w-5xl">
+          <div className="text-center mb-16">
+            <Badge className="mb-4 bg-accent/10 text-accent border-accent/20">Калькулятор</Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">Рассчитайте стоимость</h2>
+            <p className="text-xl text-muted-foreground">
+              Выберите нужные услуги и получите предварительную оценку
+            </p>
+          </div>
+
+          <Card className="p-8">
+            <div className="space-y-8">
+              <div>
+                <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                  <Icon name="CheckSquare" size={24} className="text-primary" />
+                  Выберите услуги
+                </h3>
+                <div className="grid md:grid-cols-2 gap-4">
+                  {content.services.map((service, index) => (
+                    <div
+                      key={index}
+                      onClick={() => toggleService(index)}
+                      className={`p-4 border-2 rounded-xl cursor-pointer transition-all ${
+                        selectedServices.includes(index)
+                          ? 'border-primary bg-primary/5'
+                          : 'border-border hover:border-primary/50'
+                      }`}
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <h4 className="font-semibold mb-1">{service.title}</h4>
+                          <p className="text-sm text-muted-foreground">от {formatPrice(servicePrices[service.title] || 0)} ₽</p>
+                        </div>
+                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                          selectedServices.includes(index)
+                            ? 'border-primary bg-primary'
+                            : 'border-border'
+                        }`}>
+                          {selectedServices.includes(index) && (
+                            <Icon name="Check" size={16} className="text-white" />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                  <Icon name="Building2" size={24} className="text-primary" />
+                  Тип проекта
+                </h3>
+                <div className="grid md:grid-cols-3 gap-4">
+                  {Object.keys(projectTypeMultiplier).map((type) => (
+                    <div
+                      key={type}
+                      onClick={() => setProjectType(type)}
+                      className={`p-4 border-2 rounded-xl cursor-pointer transition-all text-center ${
+                        projectType === type
+                          ? 'border-primary bg-primary/5'
+                          : 'border-border hover:border-primary/50'
+                      }`}
+                    >
+                      <h4 className="font-semibold">{type}</h4>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                  <Icon name="Users" size={24} className="text-primary" />
+                  Размер команды
+                </h3>
+                <div className="grid md:grid-cols-3 gap-4">
+                  {Object.keys(teamSizeMultiplier).map((size) => (
+                    <div
+                      key={size}
+                      onClick={() => setTeamSize(size)}
+                      className={`p-4 border-2 rounded-xl cursor-pointer transition-all text-center ${
+                        teamSize === size
+                          ? 'border-primary bg-primary/5'
+                          : 'border-border hover:border-primary/50'
+                      }`}
+                    >
+                      <h4 className="font-semibold">{size}</h4>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {selectedServices.length > 0 && (
+                <div className="pt-6 border-t">
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-1">Примерная стоимость проекта</p>
+                      <p className="text-4xl font-bold text-primary">{formatPrice(calculateTotal())} ₽</p>
+                    </div>
+                    <Dialog open={showQuoteDialog} onOpenChange={setShowQuoteDialog}>
+                      <DialogTrigger asChild>
+                        <Button size="lg" className="bg-gradient-to-r from-primary to-accent">
+                          <Icon name="Send" className="mr-2" size={20} />
+                          Получить точный расчёт
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Запрос на точный расчёт</DialogTitle>
+                          <DialogDescription>
+                            Оставьте контакты, и я свяжусь с вами для обсуждения деталей
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 py-4">
+                          <div className="p-4 bg-muted rounded-lg">
+                            <p className="text-sm font-semibold mb-2">Выбранные услуги:</p>
+                            <ul className="text-sm space-y-1">
+                              {selectedServices.map(index => (
+                                <li key={index}>• {content.services[index].title}</li>
+                              ))}
+                            </ul>
+                            {projectType && <p className="text-sm mt-2">Тип: {projectType}</p>}
+                            {teamSize && <p className="text-sm">Команда: {teamSize}</p>}
+                            <p className="text-lg font-bold text-primary mt-3">≈ {formatPrice(calculateTotal())} ₽</p>
+                          </div>
+                          <input 
+                            type="text" 
+                            placeholder="Ваше имя" 
+                            className="w-full px-4 py-3 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                          />
+                          <input 
+                            type="tel" 
+                            placeholder="Телефон" 
+                            className="w-full px-4 py-3 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                          />
+                          <input 
+                            type="email" 
+                            placeholder="Email" 
+                            className="w-full px-4 py-3 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                          />
+                          <Button className="w-full bg-gradient-to-r from-primary to-accent">
+                            <Icon name="Send" className="mr-2" size={20} />
+                            Отправить заявку
+                          </Button>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    * Итоговая стоимость рассчитывается индивидуально после детального обсуждения задач
+                  </p>
+                </div>
+              )}
+            </div>
+          </Card>
         </div>
       </section>
 
